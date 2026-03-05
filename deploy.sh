@@ -24,6 +24,7 @@ RUN_PROXY_ENV=" -e HTTP_PROXY=${PROXY_URL}"
 RUN_PROXY_ENV="$RUN_PROXY_ENV -e HTTPS_PROXY=${PROXY_URL}"
 RUN_PROXY_ENV="$RUN_PROXY_ENV -e http_proxy=${PROXY_URL}"
 RUN_PROXY_ENV="$RUN_PROXY_ENV -e https_proxy=${PROXY_URL}"
+RUN_PROXY_ENV="$RUN_PROXY_ENV   --network test-net "
 
 echo "==> [1/5] 停止并删除旧容器（如果存在）: ${CONTAINER_NAME}"
 if docker ps -a --format '{{.Names}}' | grep -qx "${CONTAINER_NAME}"; then
@@ -46,7 +47,7 @@ echo "==> 重新编译项目"
 mvn clean package
 
 echo "==> [3/5] 重新构建镜像: ${IMAGE_NAME}"
-eval docker build --network=host  $BUILD_ARGS .
+eval docker build $BUILD_ARGS .
 
 echo "==> [4/5] 运行新容器: ${CONTAINER_NAME}"
 # ls -a 看是否挂载
